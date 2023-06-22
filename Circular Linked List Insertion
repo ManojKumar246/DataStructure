@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node 
+{
+  struct Node*prev;
+  int data;
+  struct Node*next;
+};
+
+struct Node *head=NULL,*tail=NULL;
+
+void append(int data)
+{
+  struct Node *newnode=malloc(sizeof*newnode);
+  newnode->data=data;
+  newnode->next=NULL;
+  if(head==NULL)
+  {
+    head=tail=newnode;
+    newnode->next=newnode->prev=newnode;
+  }
+  else
+  {
+    tail->next=newnode;
+    newnode->prev=tail;
+    tail=newnode;
+    newnode->next=head;
+    head->prev=newnode;
+  }
+}
+void insert(int position, int data)
+{
+  int counter=1;
+  struct Node *newnode=malloc(sizeof *newnode);
+  newnode->data=data;
+  struct Node *ptr=head;
+  if(position == 1)
+  {
+    newnode->next=head;
+    head->prev=newnode;
+    newnode->prev=tail;
+    tail->next=newnode;
+    head=newnode;
+  }
+  else
+  {
+    while(counter<position-1)
+    {
+      ptr=ptr->next;
+      counter++;
+    }
+    if(ptr->next==tail)
+    tail=newnode;
+    newnode->next=ptr->next;
+    ptr->next->prev=newnode;
+    ptr->next=newnode;
+    newnode->prev=ptr;
+  }
+}
+void print(struct Node *ptr)
+{
+   do
+  {
+    printf("%d ",ptr->data);
+    ptr=ptr->next;
+  }
+  while(ptr!=head);
+}
+    
+  
+int main() 
+{
+  int N=5;
+  scanf("%d",&N);
+  int arr[5]={1,2,3,4,5};
+  for(int i=0;i<N;i++)
+  {
+    append(arr[i]);
+  }
+  print(head);
+  printf("\n");
+  //insert(1,10);
+  //insert(3,30);
+  insert(6,60) ; 
+  print(head);
+ 
+
+  return 0;
+}
