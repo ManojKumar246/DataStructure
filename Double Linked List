@@ -1,0 +1,45 @@
+#include <stdio.h>-
+
+struct Node
+{
+    struct  Node *prev;
+    int data;
+    struct Node *next;
+};
+
+struct Node *head=NULL,*tail=NULL;
+
+void append(int n)
+{
+    struct Node *newNode=malloc(sizeof *newNode);
+    newNode->data=n;
+    newNode->next=NULL;
+    if(head==NULL)
+    {
+        newNode->prev=NULL;
+        head=tail=newNode;
+    }
+    else
+    {
+        tail->next=newNode;
+        newNode->prev=tail;
+        tail=newNode;
+    }
+}
+int main()
+{
+    int N=5;
+    scanf("%d",&N);
+    int arr[5]={1,2,3,4,5};
+    for(int i=0;i<N;i++)
+    {
+        scanf("%d",&arr[i]);
+        append(arr[i]);
+    }
+    struct Node *ptr=tail;
+    while(ptr!=NULL)
+    {
+      printf("%d ",ptr->data);
+      ptr=ptr->prev;
+    }
+}
