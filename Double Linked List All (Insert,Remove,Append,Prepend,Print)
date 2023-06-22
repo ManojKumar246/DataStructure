@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    struct node *prev;
+    int data;
+    struct node *next;
+}; 
+
+struct node *head=NULL,*tail=NULL;
+
+void append(int data)
+{
+    struct node *newnode=malloc(sizeof *newnode);
+    newnode->data=data;
+    newnode->prev=newnode->next=NULL;
+    if(head==NULL)
+    {
+        head=tail=newnode;
+    }
+    else
+    {
+        tail->next=newnode;
+        newnode->prev=tail;
+        tail=newnode;
+    }
+}
+void Insert(int position,int data)
+{
+    struct node *newnode=malloc(sizeof *newnode);
+    newnode->data=data;
+    newnode->prev=newnode->next=NULL;
+    int counter=1;
+    struct node *ptr=head;
+    if(position==1)
+    {
+        newnode->next=head;
+        head->prev=newnode;
+        head=head->prev;
+    }
+    else 
+    {
+        while(counter < position -1)
+        {
+            ptr=ptr->next;
+            counter++;
+        }
+        newnode->next=ptr->next;
+        ptr->next->prev=newnode;
+        ptr->next=newnode;
+        newnode->prev=ptr;
+    }
+}
+void Insertail(int data)
+{
+    struct node *newnode=malloc(sizeof *newnode);
+    newnode->data=data;
+    newnode->next=NULL;
+    tail->next=newnode;
+    newnode->prev=tail;
+    tail=newnode;
+}
+void print(struct node *ptr)
+{
+    while(ptr!=NULL)
+    {
+        printf("%d ",ptr->data);
+        ptr=ptr->next;
+    }
+    printf("\n");
+}
+void removeAt(int position)
+{
+    struct node *ptr=head;
+    int counter=1;
+    if(position==1)
+    {
+        head=head->next;
+        head->prev=NULL;
+        free(ptr);
+    }
+    else
+    {
+        while(counter < position-1)
+        {
+            ptr=ptr->next;
+            counter++;
+        }
+        struct node *temp=ptr->next;
+        if(temp!=tail)
+        {
+            ptr->next=ptr->next->next;
+            temp->next->prev=ptr;
+        }
+        else
+        ptr->next=NULL;
+        free(temp);
+        
+    }
+    
+}
+int main()
+{
+    int N;
+    scanf("%d",&N);
+    int arr[N];
+    for(int i=0;i<N;i++)
+    {
+        scanf("%d",&arr[i]);
+        append(arr[i]);
+    }
+    print(head);
+    removeAt(1);
+    print(head);
+    removeAt(3);
+    print(head);
+    removeAt(3);
+    print(head);
+    
+
+    return 0;
+}
+
