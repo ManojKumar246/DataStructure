@@ -1,0 +1,70 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node 
+{
+  struct Node*prev;
+  int data;
+  struct Node*next;
+};
+
+struct Node *head=NULL,*tail=NULL;
+
+void append(int data)
+{
+  struct Node *newnode=malloc(sizeof*newnode);
+  newnode->data=data;
+  newnode->next=NULL;
+  if(head==NULL)
+  {
+    head=tail=newnode;
+    newnode->next=newnode->prev=newnode;
+  }
+  else
+  {
+    tail->next=newnode;
+    newnode->prev=tail;
+    tail=newnode;
+    newnode->next=head;
+    head->prev=newnode;
+  }
+}
+int detectloop(struct Node *list)   
+{  
+   struct Node *S = list, *F=list;  
+   while(1)   
+{  
+    S=S->next;  
+    F=F->next->next;  
+if(F==S)  
+{  
+   printf("loop exists");  
+  return 1;  
+}
+}  
+return 0;  
+}  
+int main() 
+{
+  int N=5;
+  scanf("%d",&N);
+  int arr[5]={1,2,3,4,5};
+  for(int i=0;i<N;i++)
+  {
+    append(arr[i]);
+  }
+  struct Node *ptr=head;
+  do
+  {
+    printf("%d",ptr->data);
+    ptr=ptr->next;
+  }
+  while(ptr!=head);
+  printf("\n");
+  detectloop(head);
+    
+
+  return 0;
+}
+
+
