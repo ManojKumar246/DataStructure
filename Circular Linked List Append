@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    struct node*left;
+    int data;
+    struct node*right;
+};
+struct node *head=NULL,*tail=NULL;
+
+void append(int data)
+{
+    struct node *newnode=malloc(sizeof *newnode);
+    newnode->data=data;
+    if(head==NULL)
+    {
+        head=tail=newnode;
+    }
+    else
+    {
+        tail->right=newnode;
+        newnode->left=tail;
+        tail=newnode;
+    }
+    tail->right=head;
+    head->left=tail;
+}
+void insertAt(int position,int data,int N)
+{
+    int counter=1;
+    struct node*newnode=malloc(sizeof *newnode);
+    newnode->data=data;
+    struct node *ptr=head;
+    if(position == 1)
+    {
+        newnode->right=head;
+        head->left=newnode;
+        head=newnode;
+    }
+    else
+    {
+        while(counter < position-1)
+        {
+            ptr=ptr->right;
+            counter++;
+        }
+        newnode->right=ptr->right;
+        ptr->right->left=newnode;
+        ptr->right=newnode;
+        newnode->left=ptr;
+    }
+    tail->right=head;
+    head->left=tail;
+}
+void insertLast(int data)
+{
+    struct node*newnode=malloc(sizeof *newnode);
+    newnode->data=data;
+    tail->right=newnode;
+    newnode->left=tail;
+    tail=newnode;
+    tail->right=head;
+    head->left=tail;
+}
+void print(struct node *ptr)
+{
+    do
+    {
+        printf("%d ",ptr->data);
+        ptr=ptr->right;
+    }
+    while(ptr!=head);
+    printf("\n");
+}
+
+int main()
+{
+    int N;
+    scanf("%d",&N);
+    int arr[N];
+    for(int i=0;i<N;i++)
+    {
+        scanf("%d",&arr[i]);
+        append(arr[i]);
+    }
+    printf("Normal List : ");
+    print(head);
+    int M,position,value;
+    scanf("%d",&M);
+    for(int j=0;j<M;j++)
+    {
+        scanf("%d %d",&position,&value);
+        insertAt(position,value,N);
+    }
+    printf("Insert In First and Middle  : ");
+    print(head);
+    printf("Insertion In last : ");
+    insertLast(100);
+    print(head);
+
+    return 0;
+}
+
