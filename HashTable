@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct hashNode {
+  char* key;
+  void* value;
+  struct hashNode* next;
+} hashNode;
+
+typedef struct hashTable {
+  int size;
+  hashNode** table;
+} hashTable;
+
+// Hash function for strings
+unsigned long hash(char* str) {
+  unsigned long hash = 5381;
+  int c;
+  while (c = *str++)
+    hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+  return hash;
+}
+
+hashTable* createHashTable(int size) {
+  hashTable* ht = malloc(sizeof(hashTable));
+  ht->size = size;
+  ht->table = malloc(sizeof(hashNode*) * size);
+  for (int i = 0; i < size; i++)
+    ht->table[i] = NULL;
+  return ht;
+}
+
+void insertHash(hashTable* ht, char* key, void* value) {
+  unsigned long hashValue = hash(key) % ht->size;
+  hashNode* node = malloc(sizeof(hashNode));
+  node->key = key;
+  node->value = value;
+  node->next = ht->table[hashValue];
+  ht->table[hashValue] = node;
+}
+
+void* searchHash(hashTable* ht, char* key) {
+  unsigned long hashValue = hash(key) % ht->size;
+  hashNode* node = ht->table[hashValue];
+  while (node != NULL) {
+    if (strcmp(key, node->key) == 0)
+      return node->value;
+    node = node->next;
+  }
+  return NULL;
+}
+
+void freeHash(hashTable* ht) {
+  for (int i = 0; i < ht->size; i++) {
+    hashNode* node = ht->table[i];
+    while (node != NULL) {
+      hashNode* tmp = node;
+      node = node->next;
+      free(tmp);
+    }
+  }
+  free(ht->table);
+  free(ht);
+}
+
+int main() 
+{
+  hashTable* ht = createHashTable(10);
+  // Inserting data into the hash table
+  insertHash(ht, "John", "Book");
+  insertHash(ht, "James", "Uniform");
+  insertHash(ht, "Jill", "Shoes");
+  // Searching for data in the hash table
+  printf("%s has been given a %s\n", "John", (char*)searchHash(ht, "John"));
+  printf("%s has been given a %s\n", "James", (char*)searchHash(ht, "James"));
+  printf("%s has been given a %s\n", "Jill", (char*)searchHash(ht, "Jill"));
+  freeHash(ht);
+  return 0;
+}
