@@ -1,0 +1,36 @@
+#include<stdio.h> 
+struct Node 
+{ 
+   int price; 
+   struct Node *next;
+}; 
+struct Node *head=NULL, *tail=NULL; 
+void prepend(int price) 
+{ 
+  struct Node *newNode = malloc(sizeof *newNode);//(struct Node)); 
+  newNode->price = price; 
+  newNode->next = head; 
+  head = newNode; 
+  if(tail == NULL) 
+  { 
+    tail = newNode; 
+  } 
+} 
+int main() 
+{ 
+  int N=5, counter, price;
+  int arr[5]={10,20,30,40,50};
+  scanf("%d", &N); 
+  for(counter=0; counter<N; counter++) 
+  { 
+    scanf("%d", &price); 
+    prepend(arr[counter]); 
+  } 
+  struct Node *ptr = head; 
+  while(ptr != NULL) 
+  { 
+    printf("%d->", ptr->price); 
+    ptr = ptr->next; 
+  } 
+  printf("NULL"); 
+}
